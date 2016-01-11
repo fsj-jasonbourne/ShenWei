@@ -1,0 +1,8 @@
+#!/bin/bash
+pwd=/sys/class/net/eth1/statistics/rx_bytes
+rv1=`cat ${pwd}`
+sleep 3
+rv2=`cat ${pwd}`
+rv=`expr ${rv2} - ${rv1}`
+a=`expr ${rv} / 1024` 
+echo "${a}"

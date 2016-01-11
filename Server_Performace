@@ -1,8 +1,8 @@
 #!/bin/sh
 rm -rf *.dat
 #**********************************************************
-# Definition of the function of JAVA_PROCESS CPU WATHCER% *
-# Definition of the function of JAVA_PROCESS MEM WATCHER% *
+# Definition  the function of JAVA_PROCESS CPU WATHCER% *
+# Definition  the function of JAVA_PROCESS MEM WATCHER% *
 #**********************************************************
 DATE=`date +%m-%d`
 Function_Cpu() 

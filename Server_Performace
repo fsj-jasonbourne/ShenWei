@@ -1,0 +1,53 @@
+#!/bin/sh
+rm -rf *.dat
+#**********************************************************
+# Definition of the function of JAVA_PROCESS CPU WATHCER% *
+# Definition of the function of JAVA_PROCESS MEM WATCHER% *
+#**********************************************************
+DATE=`date +%m-%d`
+Function_Cpu() 
+{
+	JAVA_CPU=`ps -aux|grep java |awk -F ' ' '{print $3}'|sed -n '1p'`
+	echo "${JAVA_CPU}" >> cpu.dat${DATE}
+}
+Function_Mem()
+{
+	JAVA_mem=`ps -aux|grep java |awk -F ' ' '{print $4}'|sed -n '1p'`
+	echo "${JAVA_mem}" >> mem.dat${DATE}
+}
+#**********************************************************
+# This ScripteFile is used for watch Server's Performace  *
+# This is an ugly ScriptFile ,write by JasonBourne	  *
+#**********************************************************
+
+#**********************************************************
+# Find the process ID of Java $JAVA_PRO			  *
+# Record the java process's number $JAVA_NUM		  *
+#**********************************************************
+JAVA_PRO=`pgrep java`
+JAVA_NUM=`pgrep java | wc -l`
+#**********************************************************
+# 1.Judge the number of java process (only 1 is right)    *
+# 2.The other JAVA_NUM is wrong !!!			  *
+#**********************************************************
+while true
+do
+{
+	if [ ${JAVA_NUM} -eq 1 ]
+	then
+	{
+		echo "The java process number is right !"
+		Function_Cpu
+		Function_Mem
+		echo "over!!"
+	}
+	else
+	{
+		echo "The java process number is wrong !"
+		exit 5
+	}
+	fi
+	sleep 1
+}
+done
+

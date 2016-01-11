@@ -50,11 +50,12 @@ do
 	if [ ${JAVA_NUM} -eq 1 ]
 	then
 	{
-		echo "The java process number is right !"
+		#echo "The java process number is right !"
+		
 		Function_Cpu
 		Function_Mem
 		Function_Port
-		echo "over!!"
+		#echo "over!!"
 	}
 	else
 	{

@@ -1,21 +1,35 @@
 #!/bin/sh
 rm -rf *.dat
 #**********************************************************
-# Definition  the function of JAVA_PROCESS CPU WATHCER% *
-# Definition  the function of JAVA_PROCESS MEM WATCHER% *
+# Definition the function of JAVA_PROCESS CPU WATHCER%    *
+# Definition the function of JAVA_PROCESS MEM WATCHER%    *
+# Definition the function of JAVA_PROCESS PORT WATCHER%   *
 #**********************************************************
 DATE=`date +%m-%d`
+CW="CLOSE_WAIT"
+# Definition the function of JAVA_PROCESS CPU WATHCER%    
 Function_Cpu() 
 {
 	JAVA_CPU=`ps -aux|grep java |awk -F ' ' '{print $3}'|sed -n '1p'`
 	echo "${JAVA_CPU}" >> cpu.dat${DATE}
 }
+# Definition the function of JAVA_PROCESS MEM WATCHER%    
 Function_Mem()
 {
-	JAVA_mem=`ps -aux|grep java |awk -F ' ' '{print $4}'|sed -n '1p'`
-	echo "${JAVA_mem}" >> mem.dat${DATE}
+	JAVA_MEM=`ps -aux|grep java |awk -F ' ' '{print $4}'|sed -n '1p'`
+	echo "${JAVA_MEM}" >> mem.dat${DATE}
 }
-#**********************************************************
+# Definition the function of JAVA_PROCESS PORT WATCHER%   
+Function_Port()
+{
+	JAVA_PORT_ONE=`lsof -i:88 | grep ${CW}` 
+	echo "${JAVA_PORT_ONE}" >> port_88.dat${DATE}
+	JAVA_PORT_TWO=`lsof -i:8080 | grep ${CW}`
+	echo "${JAVA_PORT_TWO}" >> port_8080.dat${DATE}
+	JAVA_PORT_THREE=`lsof -i:443 | grep ${CW}`
+	echo "${JAVA_PORT_THREE}" >> port_443.dat${DATE}
+}
+#yo**********************************************************
 # This ScripteFile is used for watch Server's Performace  *
 # This is an ugly ScriptFile ,write by JasonBourne	  *
 #**********************************************************
@@ -39,6 +53,7 @@ do
 		echo "The java process number is right !"
 		Function_Cpu
 		Function_Mem
+		Function_Port
 		echo "over!!"
 	}
 	else

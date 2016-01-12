@@ -1,8 +1,43 @@
-#!/bin/bash
+#!/bin/sh
+#*****************************************************************
+# This Script is for analysis the rate of flow about this system *
+# Write by fushijia 2016-01-12 TELL:18591925717			 *
+#*****************************************************************
+# Defination global value
+time=1
+# Record the path of rx_bytes file
 pwd=/sys/class/net/eth1/statistics/rx_bytes
-rv1=`cat ${pwd}`
-sleep 3
-rv2=`cat ${pwd}`
-rv=`expr ${rv2} - ${rv1}`
-a=`expr ${rv} / 1024` 
-echo "${a}"
+# Defination the function of rate of flow
+Function_Flow()
+{
+	rx1=`cat ${pwd}`	
+	sleep 1
+	rx2=`cat ${pwd}`
+	rx=`expr ${rx2} - ${rx1}`
+	# Change flow to Kb/s
+	#flow=`expr ${rv} / 1024` 
+	flow=$(echo "scale=2;${rx}/1024"|bc -l|awk '{printf "%.2f",$0}')
+	echo -n "${flow}kb/s	" 
+}
+# Start to calculate in a while loop
+while true
+do
+{	
+	#echo "${time}"
+	#invoke the Function_Flow
+	if [ ${time} -lt 10 ]
+	then
+	{
+		Function_Flow
+		((time++))
+	}
+	else
+	{
+		Function_Flow
+		echo ""
+		time=1
+	}
+	fi
+}
+done
+##USED_PERCENT=$(echo "scale=4;${FREE_USED}/${FREE_TOTAL}*100"|bc)

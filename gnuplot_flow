@@ -1,0 +1,24 @@
+#!/bin/bash
+Function_Name()
+{
+	JPG_NAME=`zenity --entry --title="图片名称" --text="请输入需要生成的图片名称"`
+	echo "${JPG_NAME}"
+}
+Function_File()
+{
+	FILE_PATH=`zenity --file-selection --file-filter=*dat*`
+	echo "${FILE_PATH}" 
+}
+Function_Gnuplot()
+{
+	FILE_PATH="$(Function_File)"
+	JPG_NAME="$(Function_Name)"
+	#echo "${FILE_PATH}"
+	#echo "${JPG_NAME}"
+	gnuplot  -persist -e "set terminal 'png';set title'ShenWei-Server-RX';set ylabel 'kb/s';set xlabel 'times/s';set points 1;set lines 1;plot '${FILE_PATH}'" > ${JPG_NAME}.png
+}
+Function_Main()
+{
+	Function_Gnuplot
+}
+Function_Main

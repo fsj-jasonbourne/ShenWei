@@ -1,0 +1,63 @@
+#!/bin/sh
+rm -rf *.dat
+#****************************************************************
+# Definition the function of EdpService_PROCESS CPU WATHCER%    *
+# Definition the function of EdpService_PROCESS MEM WATCHER%    *
+# Definition the function of EdpService_PROCESS PORT WATCHER%   *
+#****************************************************************
+DATE=`date +%m-%d`
+# Definition value of CW (CLOSE_WAIT)
+CW=CLOSE_WAIT
+# Definition the function of EdpService_PROCESS CPU WATHCER%    
+Function_Cpu() 
+{
+	EdpService_CPU=`ps aux|grep EdpService |awk -F ' ' '{print $3}'|sed -n '1p'`
+	echo "${EdpService_CPU}" >> cpu.dat${DATE} &
+}
+# Definition the function of EdpService_PROCESS MEM WATCHER%    
+Function_Mem()
+{
+	EdpService_MEM=`ps aux|grep EdpService |awk -F ' ' '{print $4}'|sed -n '1p'`
+	echo "${EdpService_MEM}" >> mem.dat${DATE} &
+}
+# Definition the function of EdpService_PROCESS PORT WATCHER%   
+Function_Port()
+{
+	JAVA_PORT_THREE=`lsof -i:22105 | grep ${CW}`
+	echo  "${JAVA_PORT_THREE}" >> 22105.dat${DATE} &
+}
+#yo**************************************************************
+# This ScripteFile is used for watch Server's Performace        *
+# This is an ugly ScriptFile ,write by JasonBourne	        *
+#****************************************************************
+
+#****************************************************************
+# Find the process ID of EdpService $EdpService_PRO	        *
+# Record the EdpService process's number $EdpService_NUM        *
+#****************************************************************
+EdpService_NUM=`pgrep EdpService | wc -l`
+#****************************************************************
+# 1.Judge the number of EdpService process (only 1 is right)    *
+# 2.The other EdpService_NUM is wrong !!!			*
+#****************************************************************
+while true
+do
+{
+	if [ ${EdpService_NUM} -eq 1 ]
+	then
+	{
+		#echo "The EdpService process number is right !"
+		Function_Cpu
+		Function_Mem
+		Function_Port
+	}
+	else
+	{
+		echo "The EdpService process number is wrong !"
+		exit 5
+	}
+	fi
+	sleep 1
+}
+done
+
